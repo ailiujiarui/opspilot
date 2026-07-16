@@ -12,6 +12,12 @@
 ## 本地运行
 
 ```bash
+# 终端一：API
+cd apps/api
+npm install
+npm run dev
+
+# 终端二：Web
 cd apps/web
 npm install
 npm run dev
@@ -27,4 +33,11 @@ npm run build
 
 自动化模块由原 CanvasFlow 项目迁入。原仓库保留为归档，只读保存迁移前历史。
 
-当前 Agent 为前端交互原型，只做只读分析预览，不直接修改业务数据，也不执行任意 HTTP 请求。
+当前 Agent 支持确定性的只读意图解析，并由 Fastify API 对 10 万条演示项目数据执行真实筛选。写操作仍停留在预览入口，不直接修改业务数据，也不执行任意 HTTP 请求。
+
+Agent 固定评测：
+
+```bash
+cd apps/api
+npm run eval
+```
