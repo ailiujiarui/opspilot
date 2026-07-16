@@ -12,9 +12,11 @@
   "dependencies": {
     "@tanstack/react-query": "^5.101.2",
     "@tanstack/react-virtual": "^3.14.6",
+    "@xyflow/react": "^12.11.2",
     "lucide-react": "^0.468.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
