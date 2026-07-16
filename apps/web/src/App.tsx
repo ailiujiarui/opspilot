@@ -13,11 +13,11 @@ function Dashboard() {
     if (prompt.trim().length < 2) return
     setStreamState('正在创建运行...'); setStreamTotal(null)
     try {
-      const apiBase = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001/api'
+      const apiBase = import.meta.env.VITE_API_BASE_URL ?? '/api'
       const response = await fetch(`${apiBase}/agent/runs`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message: prompt }) })
       if (!response.ok) throw new Error()
       const run = await response.json() as { eventsUrl: string }
-      const streamUrl = new URL(run.eventsUrl, new URL(apiBase).origin).toString()
+      const streamUrl = apiBase.startsWith('http') ? new URL(run.eventsUrl, new URL(apiBase).origin).toString() : run.eventsUrl
       const source = new EventSource(streamUrl)
       source.addEventListener('model_started', () => setStreamState('DeepSeek 正在理解问题...'))
       source.addEventListener('model_completed', event => { const data = JSON.parse((event as MessageEvent).data) as { source: string }; setStreamState(data.source === 'deepseek' ? 'DeepSeek 解析完成' : '模型不可用，已切换本地解析') })
@@ -42,7 +42,7 @@ function Dashboard() {
 function AuditPage() {
   const [events, setEvents] = useState<Array<{ id: string; sequence: number; actorId: string; outcome: string; recordIds: number[]; createdAt: string }>>([])
   const [error, setError] = useState('')
-  useEffect(() => { fetch(`${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001/api'}/audit-events`).then(response => { if (!response.ok) throw new Error(); return response.json() }).then((body: { events: typeof events }) => setEvents(body.events)).catch(() => setError('暂时无法读取审计记录')) }, [])
+  useEffect(() => { fetch(`${import.meta.env.VITE_API_BASE_URL ?? '/api'}/audit-events`).then(response => { if (!response.ok) throw new Error(); return response.json() }).then((body: { events: typeof events }) => setEvents(body.events)).catch(() => setError('暂时无法读取审计记录')) }, [])
   return <main className="audit-page"><div className="audit-heading"><p>只追加审计日志</p><h1>审计中心</h1><span>业务用户不能修改或删除以下事件。</span></div>{error && <div className="audit-empty">{error}</div>}{!error && events.length === 0 && <div className="audit-empty"><ScrollText size={26}/><strong>暂无审计记录</strong><span>确认执行变更后，事件会显示在这里。</span></div>}<div className="audit-list">{events.map(event => <article key={event.id}><span className="audit-sequence">#{event.sequence}</span><div><strong>批量更新项目状态</strong><p>{event.actorId} · {new Date(event.createdAt).toLocaleString()}</p></div><span>{event.recordIds.length} 条记录</span><b>{event.outcome === 'success' ? '成功' : '失败'}</b></article>)}</div></main>
 }
 
