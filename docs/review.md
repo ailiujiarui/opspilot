@@ -41,3 +41,10 @@
 - 字段级 Zod schema 约束状态枚举、金额类型、日期格式和操作符。
 - 真实冒烟测试发现并修复状态枚举和 filters 形状问题；修复后 DeepSeek 正确解析复合查询。
 - API 12 个测试、Web lint、TypeScript 和生产构建通过。
+
+## 2026-07-16 一键开发环境
+
+- 定位“无法连接 Agent 服务”为只启动 Web、API 3001 端口未运行。
+- 新增根级 `npm run dev`，并发启动 Node.js API 与 Vite Web。
+- Vite 统一代理 `/api`，前端不再硬编码 localhost API 地址。
+- 根级 lint、12 个 API 测试和前后端生产构建通过。

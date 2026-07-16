@@ -12,16 +12,11 @@
 ## 本地运行
 
 ```bash
-# 终端一：API
-cd apps/api
-npm install
-npm run dev
-
-# 终端二：Web
-cd apps/web
 npm install
 npm run dev
 ```
+
+在仓库根目录执行即可同时启动 Node.js API 和 Web。默认地址：Web `http://localhost:5173`，API `http://localhost:3001`。Vite 会把浏览器的 `/api` 请求代理到 Node.js，避免手工配置跨域地址。
 
 验证命令：
 
