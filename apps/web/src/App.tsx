@@ -94,18 +94,18 @@ function App() {
     </section>
 
     <section className="grid-frame">
-      <div className="grid-header row-grid">
+      <div className="grid-header row-grid" role="row">
         <div className="row-number header-cell">#</div>
         {columns.map(c => <div className="header-cell" key={c.key} style={{ width: c.width }}><span>{c.key === 'due' && <CalendarDays size={14}/>} {c.label}</span><ChevronDown size={13}/></div>)}
       </div>
-      <div ref={parentRef} className="grid-scroll" tabIndex={0} onKeyDown={e => {
+      <div ref={parentRef} className="grid-scroll" role="grid" aria-rowcount={visible.length} aria-colcount={columns.length + 1} tabIndex={0} onKeyDown={e => {
         if (e.key === 'Enter' && editing) commit()
         if (e.key === 'Escape') setEditing(null)
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) redoEdit(); else undo() }
       }}>
         {visible.length === 0 ? <div className="empty"><Search size={28}/><h2>没有找到记录</h2><p>请尝试其他搜索词，或清除状态筛选。</p><button onClick={() => {setQuery(''); setStatus('All')}}>清除筛选</button></div> :
         <div className="virtual-space" style={{ height: virtual.getTotalSize() }}>
-          {virtual.getVirtualItems().map(item => { const row = visible[item.index]; return <div className="data-row row-grid" key={row.id} style={{ transform: `translateY(${item.start}px)` }}>
+          {virtual.getVirtualItems().map(item => { const row = visible[item.index]; return <div className="data-row row-grid" role="row" aria-rowindex={item.index + 1} key={row.id} style={{ transform: `translateY(${item.start}px)` }}>
             <div className="row-number"><input type="checkbox" aria-label={`选择第 ${row.id} 行`}/><span>{row.id}</span></div>
             {columns.map(c => { const isEditing = editing?.id === row.id && editing.key === c.key; const value = row[c.key]; return <div key={c.key} style={{ width: c.width }} className={`cell ${active?.id === row.id && active.key === c.key ? 'active' : ''}`} onClick={() => setActive({id: row.id, key: c.key})} onDoubleClick={() => setEditing({id: row.id, key: c.key, value: String(value)})}>
               {isEditing ? (c.key === 'status' ? <select autoFocus value={editing.value} onChange={e => setEditing({...editing, value:e.target.value})} onBlur={commit}>{statuses.map(s=><option key={s} value={s}>{statusLabels[s]}</option>)}</select> : <input autoFocus value={editing.value} onChange={e => setEditing({...editing, value:e.target.value})} onBlur={commit}/>) : c.key === 'status' ? <span className={`status ${String(value).toLowerCase()}`}><i/>{statusLabels[value as Status]}</span> : c.key === 'priority' ? <span className={`priority p${value}`}>优先级 {value}</span> : c.key === 'budget' ? `¥${Number(value).toLocaleString()}` : String(value)}
