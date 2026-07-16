@@ -271,6 +271,12 @@ select {
 .filter-chips span { padding: 4px 7px; border-radius: 4px; background: #eef0ff; color: #4d579d; font-size: 10px; }
 .record-refs { margin-top: 7px; display: flex; align-items: center; gap: 6px; color: #7b8490; font-size: 10px; }
 .record-refs button { border: 0; background: transparent; color: #345f9d; font-size: 10px; padding: 2px 4px; }
+.plan-confirmation { background: #fff8e5; border-top-color: #f0dca5; color: #765b20; }
+.agent-explanation { width: 100%; }
+.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; padding-top: 8px; }
+.filter-chips span { padding: 4px 7px; border-radius: 4px; background: #eef0ff; color: #4d579d; font-size: 10px; }
+.record-refs { margin-top: 7px; display: flex; align-items: center; gap: 6px; color: #7b8490; font-size: 10px; }
+.record-refs button { border: 0; background: transparent; color: #345f9d; font-size: 10px; padding: 2px 4px; }
 .tool-button {
   padding: 0 10px;
 }
