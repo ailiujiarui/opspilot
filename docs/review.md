@@ -1,5 +1,15 @@
 # 代码审查记录
 
+## 2026-07-18 SQLite 持久化阶段
+
+- API 已从内存数组切换到 `node:sqlite`，默认使用 `data/gridflow.sqlite`。
+- 首次启动自动创建表、索引和 100,000 条确定性项目数据；测试环境使用 `:memory:` 隔离。
+- 查询、筛选、排序和游标分页在服务端执行，排序追加 `id` 保证翻页稳定。
+- 单元格 PATCH 使用 `id + version` 乐观并发条件，区分 404、409 和 422 响应。
+- 动态 SQL 列名受 `ProjectColumn` 白名单限制，避免列注入。
+- CI API job 使用 Node 24，以匹配 `node:sqlite` 运行时依赖。
+- 已验证 API 单测、TypeScript 构建；完整仓库验证在提交前再次执行。
+
 ## 2026-07-16
 
 - TypeScript 严格检查与 Vite 生产构建通过。

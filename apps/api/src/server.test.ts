@@ -20,4 +20,12 @@ describe('GridFlow API', () => {
     const conflict = await app.inject({ method: 'PATCH', url: `/api/projects/${row.id}/cells/status`, payload: { value: 'Done', version: row.version } })
     expect(conflict.statusCode).toBe(409)
   })
+  it('对非首行记录返回正确版本冲突', async () => {
+    const row = (await app.inject({ method: 'GET', url: '/api/projects?limit=1&sort=task:desc' })).json().rows[0]
+    const saved = await app.inject({ method: 'PATCH', url: `/api/projects/${row.id}/cells/status`, payload: { value: 'Review', version: row.version } })
+    expect(saved.statusCode).toBe(200)
+    const conflict = await app.inject({ method: 'PATCH', url: `/api/projects/${row.id}/cells/status`, payload: { value: 'Done', version: row.version } })
+    expect(conflict.statusCode).toBe(409)
+    expect(conflict.json().row.id).toBe(row.id)
+  })
 })
